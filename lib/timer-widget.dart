@@ -37,7 +37,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          if (started == false) startTimer();
+          if (started == false) _startTimer();
         },
         child: Card(
           child: Column(
@@ -51,13 +51,13 @@ class _TimerWidgetState extends State<TimerWidget> {
                       flex: 8,
                       child:  Center(child: Text(widget.name, style: TextStyle(fontSize: 16),)),
                     ),
-                    Expanded(
+                     Expanded(
                       flex: 1,
                       child: Container(
                         height: 25,
                         //color: Color.fromRGBO(255, 0, 0, 1),
                         alignment: Alignment.topLeft,
-                        child: PopupMenuButton(
+                        child: !started ? PopupMenuButton(
                           padding: EdgeInsets.all(0),
                           icon: Icon(Icons.more_vert),
                           itemBuilder: (BuildContext context) => [
@@ -72,13 +72,13 @@ class _TimerWidgetState extends State<TimerWidget> {
                           ],
                           onSelected: (value) {
                             if (value == "edit") {
-                              edit();
+                              _edit();
                             } else if (value == "delete") {
-                              delete();
+                              _delete();
                               Scaffold.of(context).showSnackBar(SnackBar(content:Text("Deleted")));
                             }
                           },
-                        ),
+                        ) : Container(),
                       ),
                     ),
                   ],
@@ -103,7 +103,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                     textColor: STANDARD_LIGHT_TEXT,
                     child: Text("STOP", style: TextStyle(fontSize: 14),),
                     onPressed: () {
-                      stop();
+                      _stop();
                     },
                   )
                       : Container(),
@@ -114,14 +114,12 @@ class _TimerWidgetState extends State<TimerWidget> {
         ));
   }
 
-  startTimer() {
+  _startTimer() {
     _counter = widget.time;
-    print("start");
     started = true;
     t = Timer.periodic(Duration(seconds: 1), (t) {
       if (_counter > 0) {
         setState(() {
-          print(_counter);
           _counter--;
         });
         widget.onChanged(true);
@@ -144,15 +142,13 @@ class _TimerWidgetState extends State<TimerWidget> {
     });
   }
 
-  void delete() {
-    print("delete");
-    print(widget.id);
+  void _delete() {
     db.deleteTimer(widget.id);
     widget.onChanged(true);
   }
 
-  void edit() {
-    navigateToEdit(
+  void _edit() {
+    _navigateToEdit(
         CreateTimer(
           id: widget.id,
           name: widget.name,
@@ -161,7 +157,7 @@ class _TimerWidgetState extends State<TimerWidget> {
         context);
   }
 
-  void navigateToEdit(Widget w, BuildContext context) async {
+  void _navigateToEdit(Widget w, BuildContext context) async {
     bool result = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => w),
@@ -171,13 +167,11 @@ class _TimerWidgetState extends State<TimerWidget> {
     }
   }
 
-  void widgetHasChanged() {
-    print("widgetHasChanged");
+  void _widgetHasChanged() {
     widget.onChanged(true);
   }
 
-  void stop() {
-    print("stop");
+  void _stop() {
     setState(() {
       t.cancel();
       started = false;

@@ -46,7 +46,7 @@ class _GridViewTimerState extends State<GridViewTimer> {
                     future: db.getAllTimers(),
                     initialData: [],
                     builder: (ctx, snapshot) {
-                      return createTimerGridView(ctx, snapshot);
+                      return _createTimerGridView(ctx, snapshot);
                     }),
         ),
         drawer: Drawer(
@@ -95,15 +95,14 @@ class _GridViewTimerState extends State<GridViewTimer> {
             ],
           ),
         ),
-        floatingActionButton: CreateTimerButton(onChanged: handleChange),
+        floatingActionButton: CreateTimerButton(onChanged: _handleChange),
 
       // This trailing comma makes auto-formatting nicer for build methods.
 
     );
   }
 
-
-  Widget createTimerGridView(BuildContext context, AsyncSnapshot snapshot) {
+  Widget _createTimerGridView(BuildContext context, AsyncSnapshot snapshot) {
     return GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           childAspectRatio: 1.25,
@@ -115,11 +114,11 @@ class _GridViewTimerState extends State<GridViewTimer> {
               id: timers[index].id,
               name: timers[index].name,
               time: timers[index].time,
-              onChanged: handleChange);
+              onChanged: _handleChange);
         });
   }
 
-  void updateGridView() {
+  void _updateGridView() {
     db.getAllTimers().then((value) {
       setState(() {
         timers = value;
@@ -127,10 +126,9 @@ class _GridViewTimerState extends State<GridViewTimer> {
     });
   }
 
-  void handleChange(bool value) {
-    print("handleChange");
+  void _handleChange(bool value) {
     if (value) {
-      updateGridView();
+      _updateGridView();
     }
   }
 }

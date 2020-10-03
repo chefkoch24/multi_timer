@@ -81,7 +81,6 @@ class DatabaseHelper {
   Future<int> getNumberOfTimer() async{
     Database db = await database;
     int result =  Sqflite.firstIntValue(await db.rawQuery("SELECT COUNT($columnId) FROM $timerTable"));
-    print(result);
     return result;
   }
 

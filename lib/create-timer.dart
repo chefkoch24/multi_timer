@@ -217,25 +217,18 @@ class _CreateTimerState extends State<CreateTimer> {
   }
 
   void _save() {
-    print("save");
-    print("maximumNuberOfTimer -> $maximumNuberOfTimer");
-    print(MAXIMUM_NUMBER_OF_TIMER>maximumNuberOfTimer);
     if (MAXIMUM_NUMBER_OF_TIMER > maximumNuberOfTimer) {
       MyTimer t = new MyTimer(
           name: nameController.text, time: hourMinSecToInt(hour, min, sec));
-      print(t.toString());
       db.insert(t);
     }
   }
 
   void _update() {
-    print("update");
-    print("$hour:$min:$sec");
     MyTimer t = new MyTimer(
         id: widget.id,
         name: nameController.text,
         time: hourMinSecToInt(hour, min, sec));
-    print(t.toString());
     db.updateTimer(t);
   }
 
