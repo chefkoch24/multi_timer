@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:multi_timer/create-timer.dart';
 import 'package:multi_timer/database.dart';
 import 'package:multi_timer/settings.dart';
@@ -23,14 +24,22 @@ class TimerWidget extends StatefulWidget {
 
 class _TimerWidgetState extends State<TimerWidget> {
   DatabaseHelper db = DatabaseHelper.instance;
-  int _counter;
+  int _counterTimer;
   bool started = false;
   Timer t;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
-    _counter = widget.time;
+    _counterTimer = widget.time;
     super.initState();
+    var initializationSettingsAndroid =
+    AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOs = IOSInitializationSettings();
+    var initSetttings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOs);
+    flutterLocalNotificationsPlugin.initialize(initSetttings,
+        onSelectNotification: onSelectNotification
+    );
   }
 
   @override
@@ -88,7 +97,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                     Text(started
-                        ? timeToStringHMS(_counter)
+                        ? timeToStringHMS(_counterTimer)
                         : timeToStringHMS(widget.time),
                     style: TextStyle(fontSize: 24),),
                 ],
@@ -115,15 +124,17 @@ class _TimerWidgetState extends State<TimerWidget> {
   }
 
   _startTimer() {
-    _counter = widget.time;
+    _counterTimer = widget.time;
+    int counterIntern = _counterTimer;
     started = true;
     t = Timer.periodic(Duration(seconds: 1), (t) {
-      if (_counter > 0) {
+      if (_counterTimer > 0) {
         setState(() {
-          _counter--;
+          _counterTimer--;
         });
+        counterIntern--;
         widget.onChanged(true);
-      } else if (_counter == 0) {
+      } else if (_counterTimer == 0 && counterIntern >= 0) {
         FlutterRingtonePlayer.play(
           android: AndroidSounds.alarm,
           ios: IosSounds.alarm,
@@ -133,11 +144,8 @@ class _TimerWidgetState extends State<TimerWidget> {
           // Android only - API >= 28
           asAlarm: true, // Android only - all APIs
         );
-      } else {
-        t.cancel();
-        setState(() {
-          started = false;
-        });
+        showNotification();
+        counterIntern--;
       }
     });
   }
@@ -175,8 +183,26 @@ class _TimerWidgetState extends State<TimerWidget> {
     setState(() {
       t.cancel();
       started = false;
-      _counter = widget.time;
+      _counterTimer = widget.time;
     });
     FlutterRingtonePlayer.stop();
   }
+
+  showNotification() async {
+    var android = AndroidNotificationDetails(
+        'id', 'channel ', 'description',
+        priority: Priority.high, importance: Importance.max);
+    var iOS = IOSNotificationDetails();
+    var platform = new NotificationDetails(android: android, iOS: iOS);
+    await flutterLocalNotificationsPlugin.show(
+        0, 'Multi Timer', widget.name + ' is finished', platform,
+        payload: 'Welcome to the Local Notification demo');
+  }
+
+  Future<void> onSelectNotification(String payload) async {
+    if (payload != null) {
+      print('notification payload: ' + payload);
+    }
+  }
 }
+
