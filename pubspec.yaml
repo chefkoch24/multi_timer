@@ -27,6 +27,8 @@ dependencies:
   fluttertoast:
   percent_indicator:
   flutter_local_notifications: ^2.0.0
+  flutter_email_sender: ^3.0.1
+  in_app_review: ^0.2.1
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:multi_timer/create-button.dart';
 import 'package:multi_timer/create-timer.dart';
+import 'package:multi_timer/data-policy.dart';
 import 'package:multi_timer/database.dart';
 import 'package:multi_timer/model/timer.dart';
 import 'package:multi_timer/settings.dart';
@@ -32,70 +34,79 @@ class _GridViewTimerState extends State<GridViewTimer> {
   @override
   Widget build(BuildContext context) {
     int numberOfTimer = timers.length;
-
     return Scaffold(
-        appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Text(widget.title),
-        ),
-        body:Container(
+      appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
+      ),
+      body: Container(
 
-            child:
-                FutureBuilder(
-                    future: db.getAllTimers(),
-                    initialData: [],
-                    builder: (ctx, snapshot) {
-                      return _createTimerGridView(ctx, snapshot);
-                    }),
+        child:
+        FutureBuilder(
+            future: db.getAllTimers(),
+            initialData: [],
+            builder: (ctx, snapshot) {
+              numberOfTimer++;
+              return _createTimerGridView(ctx, snapshot);
+            }),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Column(
+                children: <Widget>[
+                  Text('Multi Timer'),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: new CircularPercentIndicator(
+                      radius: 80.0,
+                      lineWidth: 5.0,
+                      percent: numberOfTimer / MAXIMUM_NUMBER_OF_TIMER,
+                      center: new Text(
+                          "$numberOfTimer of $MAXIMUM_NUMBER_OF_TIMER"),
+                      progressColor: Colors.white,
+                    ),
+                  )
+                ],
+              ),
+              decoration: BoxDecoration(
+                color: PRIMARY,
+              ),
+            ),
+            ListTile(
+              title: Text('Datapolicy'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.push(context, MaterialPageRoute(builder: (context)
+                => DataPolicy())
+                );
+              },
+            ),
+            ListTile(
+              title: Text("Send feedback"),
+              onTap: (){
+                sendEmailFeedback();
+              },
+            ),
+            ListTile(
+              title: Text('Buy me a coffee'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+          ],
         ),
-        drawer: Drawer(
-          child: ListView(
-            // Important: Remove any padding from the ListView.
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                child: Column(
-                  children: <Widget>[
-                    Text('Multi Timer'),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: new CircularPercentIndicator(
-                        radius: 80.0,
-                        lineWidth: 5.0,
-                        percent: numberOfTimer/MAXIMUM_NUMBER_OF_TIMER,
-                        center: new Text("$numberOfTimer of $MAXIMUM_NUMBER_OF_TIMER"),
-                        progressColor: Colors.white,
-                      ),
-                    )
-                  ],
-                ),
-                decoration: BoxDecoration(
-                  color: PRIMARY,
-                ),
-              ),
-              ListTile(
-                title: Text('Datapolicy'),
-                onTap: () {
-                  // Update the state of the app
-                  // ...
-                  // Then close the drawer
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text('Buy me a coffee'),
-                onTap: () {
-                  // Update the state of the app
-                  // ...
-                  // Then close the drawer
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
-        floatingActionButton: CreateTimerButton(onChanged: _handleChange),
+      ),
+      floatingActionButton: CreateTimerButton(onChanged: _handleChange),
 
       // This trailing comma makes auto-formatting nicer for build methods.
 
@@ -130,5 +141,15 @@ class _GridViewTimerState extends State<GridViewTimer> {
     if (value) {
       _updateGridView();
     }
+  }
+
+  void sendEmailFeedback() async{
+    final Email email = Email(
+      subject: 'Feedback Multi Timer' ,
+      recipients: ['kuennecke-felix@web.de'],
+      isHTML: false,
+    );
+
+    await FlutterEmailSender.send(email);
   }
 }

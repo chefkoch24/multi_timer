@@ -34,7 +34,7 @@ class _TimerWidgetState extends State<TimerWidget> {
     _counterTimer = widget.time;
     super.initState();
     var initializationSettingsAndroid =
-    AndroidInitializationSettings('app_icon');
+    AndroidInitializationSettings('ic_launcher');
     var initializationSettingsIOs = IOSInitializationSettings();
     var initSetttings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOs);
     flutterLocalNotificationsPlugin.initialize(initSetttings,
