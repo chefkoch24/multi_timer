@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:multi_timer/create-timer.dart';
 import 'package:multi_timer/database.dart';
+import 'package:multi_timer/main.dart';
 import 'package:multi_timer/settings.dart';
 import 'package:multi_timer/utils/helper.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -153,6 +154,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   void _delete() {
     db.deleteTimer(widget.id);
     widget.onChanged(true);
+    MyApp.analytics.logEvent(name: "Timer deleted");
   }
 
   void _edit() {
@@ -163,6 +165,10 @@ class _TimerWidgetState extends State<TimerWidget> {
           time: widget.time,
         ),
         context);
+    MyApp.analytics.logEvent(name: "timer_edited", parameters: {
+      'time': widget.time
+    });
+
   }
 
   void _navigateToEdit(Widget w, BuildContext context) async {

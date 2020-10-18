@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:multi_timer/database.dart';
+import 'package:multi_timer/main.dart';
 import 'package:multi_timer/model/timer.dart';
 import 'package:multi_timer/utils/helper.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -222,6 +223,9 @@ class _CreateTimerState extends State<CreateTimer> {
           name: nameController.text, time: hourMinSecToInt(hour, min, sec));
       db.insert(t);
     }
+    MyApp.analytics.logEvent(name: "timer_created", parameters: {
+      'time': hourMinSecToInt(hour, min, sec)
+    });
   }
 
   void _update() {

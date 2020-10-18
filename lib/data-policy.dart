@@ -10,7 +10,10 @@ class DataPolicy extends StatelessWidget {
         // the App.build method, and use it to set our appbar title.
         title: Text("Data Policy"),
       ),
-      body: Container(child: Text("Text")),
+      body: Container(child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Text("Data Policy"),
+      )),
     );
   }
 }

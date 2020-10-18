@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:multi_timer/create-button.dart';
 import 'package:multi_timer/create-timer.dart';
 import 'package:multi_timer/data-policy.dart';
 import 'package:multi_timer/database.dart';
+import 'package:multi_timer/main.dart';
 import 'package:multi_timer/model/timer.dart';
 import 'package:multi_timer/settings.dart';
 import 'package:multi_timer/timer-widget.dart';
@@ -14,6 +16,7 @@ class GridViewTimer extends StatefulWidget {
   GridViewTimer({Key key, this.title}) : super(key: key);
 
   final String title;
+  final InAppReview inAppReview = InAppReview.instance;
 
   @override
   _GridViewTimerState createState() => _GridViewTimerState();
@@ -95,13 +98,12 @@ class _GridViewTimerState extends State<GridViewTimer> {
               },
             ),
             ListTile(
-              title: Text('Buy me a coffee'),
+              title: Text('Rate the App'),
               onTap: () {
                 // Update the state of the app
                 // ...
                 // Then close the drawer
-                Navigator.pop(context);
-              },
+                widget.inAppReview.openStoreListing(appStoreId: APPSTORE_ID_IOS);              },
             ),
           ],
         ),
