@@ -94,7 +94,7 @@ class _GridViewTimerState extends State<GridViewTimer> {
             ListTile(
               title: Text("Send feedback"),
               onTap: (){
-                sendEmailFeedback();
+               // sendEmailFeedback();
               },
             ),
             ListTile(
@@ -145,7 +145,7 @@ class _GridViewTimerState extends State<GridViewTimer> {
     }
   }
 
-  void sendEmailFeedback() async{
+  /*void sendEmailFeedback() async{
     final Email email = Email(
       subject: 'Feedback Multi Timer' ,
       recipients: ['kuennecke-felix@web.de'],
@@ -153,5 +153,5 @@ class _GridViewTimerState extends State<GridViewTimer> {
     );
 
     await FlutterEmailSender.send(email);
-  }
+  }*/
 }
