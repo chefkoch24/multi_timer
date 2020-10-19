@@ -196,10 +196,12 @@ class _CreateTimerState extends State<CreateTimer> {
                             isError = false;
                             if (editMode) {
                               _update();
+                              Navigator.pop(context, true);
                             } else {
                               _save();
+                              maximumNuberOfTimer < MAXIMUM_NUMBER_OF_TIMER ? Navigator.pop(context, "Timer successful created"): Navigator.pop(context, "You have already maximum nuber of timer");
+
                             }
-                            maximumNuberOfTimer < MAXIMUM_NUMBER_OF_TIMER ? Navigator.pop(context, "Timer successful created"): Navigator.pop(context, "You have already maximum nuber of timer");
                           }
                           // showSnackBar(context, "Created");
                         },
@@ -234,6 +236,9 @@ class _CreateTimerState extends State<CreateTimer> {
         name: nameController.text,
         time: hourMinSecToInt(hour, min, sec));
     db.updateTimer(t);
+    MyApp.analytics.logEvent(name: "timer_updated", parameters: {
+      'time': hourMinSecToInt(hour, min, sec)
+    });
   }
 
   void showSnackBar(BuildContext context, String message) {

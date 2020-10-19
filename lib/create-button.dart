@@ -21,7 +21,9 @@ class CreateTimerButton extends StatelessWidget {
   _navigateAndDisplaySelection(BuildContext context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CreateTimer(name: null, time:0)),
+      MaterialPageRoute(builder: (context) => CreateTimer(name: null, time:0),
+      settings: RouteSettings(name: 'Create Timer'),
+    ),
     );
     if(result!= null){
       Scaffold.of(context)

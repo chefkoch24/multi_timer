@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:multi_timer/create-button.dart';
-import 'package:multi_timer/create-timer.dart';
 import 'package:multi_timer/data-policy.dart';
 import 'package:multi_timer/database.dart';
 import 'package:multi_timer/main.dart';
@@ -25,18 +23,20 @@ class GridViewTimer extends StatefulWidget {
 class _GridViewTimerState extends State<GridViewTimer> {
   DatabaseHelper db = DatabaseHelper.instance;
   List<MyTimer> timers = new List<MyTimer>();
+  int numberOfTimer = 0;
 
   @override
   void initState() {
     super.initState();
     db.getAllTimers().then((value) {
       timers = value;
+      numberOfTimer = value.length;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    int numberOfTimer = timers.length;
+    //int numberOfTimer = timers.length;
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -44,9 +44,7 @@ class _GridViewTimerState extends State<GridViewTimer> {
         title: Text(widget.title),
       ),
       body: Container(
-
-        child:
-        FutureBuilder(
+        child: FutureBuilder(
             future: db.getAllTimers(),
             initialData: [],
             builder: (ctx, snapshot) {
@@ -86,32 +84,34 @@ class _GridViewTimerState extends State<GridViewTimer> {
                 // Update the state of the app
                 // ...
                 // Then close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context)
-                => DataPolicy())
-                );
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DataPolicy(),
+                      settings: RouteSettings(name: 'Data Policy'),
+                    ));
               },
             ),
             ListTile(
               title: Text("Send feedback"),
-              onTap: (){
-               // sendEmailFeedback();
+              onTap: () {
+                sendEmailFeedback();
               },
             ),
             ListTile(
-              title: Text('Rate the App'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                widget.inAppReview.openStoreListing(appStoreId: APPSTORE_ID_IOS);              },
-            ),
+                title: Text('Rate the App'),
+                onTap: () {
+                  // Update the state of the app
+                  // ...
+                  // Then close the drawer
+                  _rateApp();
+                }),
           ],
         ),
       ),
       floatingActionButton: CreateTimerButton(onChanged: _handleChange),
 
       // This trailing comma makes auto-formatting nicer for build methods.
-
     );
   }
 
@@ -145,13 +145,18 @@ class _GridViewTimerState extends State<GridViewTimer> {
     }
   }
 
-  /*void sendEmailFeedback() async{
+  void sendEmailFeedback() async {
     final Email email = Email(
-      subject: 'Feedback Multi Timer' ,
-      recipients: ['kuennecke-felix@web.de'],
+      subject: 'Feedback Multi Timer App',
+      recipients: ['multitimerapp@gmail.com'],
       isHTML: false,
     );
-
+    MyApp.analytics.logEvent(name: "Send email");
     await FlutterEmailSender.send(email);
-  }*/
+  }
+
+  void _rateApp() {
+    widget.inAppReview.openStoreListing(appStoreId: APPSTORE_ID_IOS);
+    MyApp.analytics.logEvent(name: "Rate app");
+  }
 }
