@@ -4,11 +4,11 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:multi_timer/create-button.dart';
 import 'package:multi_timer/data-policy.dart';
 import 'package:multi_timer/database.dart';
-import 'package:multi_timer/main.dart';
 import 'package:multi_timer/model/timer.dart';
 import 'package:multi_timer/settings.dart';
 import 'package:multi_timer/timer-widget.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:multi_timer/utils/helper.dart';
 
 class GridViewTimer extends StatefulWidget {
   GridViewTimer({Key key, this.title}) : super(key: key);
@@ -22,7 +22,7 @@ class GridViewTimer extends StatefulWidget {
 
 class _GridViewTimerState extends State<GridViewTimer> {
   DatabaseHelper db = DatabaseHelper.instance;
-  List<MyTimer> timers = new List<MyTimer>();
+  List<MyTimer> timers = [];
   int numberOfTimer = 0;
 
   @override
@@ -30,13 +30,14 @@ class _GridViewTimerState extends State<GridViewTimer> {
     super.initState();
     db.getAllTimers().then((value) {
       timers = value;
-      numberOfTimer = value.length;
+      logScreen(screenName: "Home", screenClass:"GridViewTimer");
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    //int numberOfTimer = timers.length;
+    // int numberOfTimer = timers.length;
+    _numberOfTimer();
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -48,7 +49,7 @@ class _GridViewTimerState extends State<GridViewTimer> {
             future: db.getAllTimers(),
             initialData: [],
             builder: (ctx, snapshot) {
-              numberOfTimer++;
+              //  numberOfTimer++;
               return _createTimerGridView(ctx, snapshot);
             }),
       ),
@@ -61,16 +62,22 @@ class _GridViewTimerState extends State<GridViewTimer> {
               child: Column(
                 children: <Widget>[
                   Text('Multi Timer'),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: new CircularPercentIndicator(
-                      radius: 80.0,
-                      lineWidth: 5.0,
-                      percent: numberOfTimer / MAXIMUM_NUMBER_OF_TIMER,
-                      center: new Text(
-                          "$numberOfTimer of $MAXIMUM_NUMBER_OF_TIMER"),
-                      progressColor: Colors.white,
-                    ),
+                  FutureBuilder(
+                      future: db.getAllTimers(),
+                      initialData: [],
+                      builder: (ctx, snapshot) {
+                        return Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: new CircularPercentIndicator(
+                            radius: 80.0,
+                            lineWidth: 5.0,
+                            percent: numberOfTimer / MAXIMUM_NUMBER_OF_TIMER,
+                            center: new Text(
+                                "$numberOfTimer of $MAXIMUM_NUMBER_OF_TIMER"),
+                            progressColor: Colors.white,
+                          ),
+                        );
+                      }
                   )
                 ],
               ),
@@ -95,7 +102,7 @@ class _GridViewTimerState extends State<GridViewTimer> {
             ListTile(
               title: Text("Send feedback"),
               onTap: () {
-                sendEmailFeedback();
+                _sendEmailFeedback();
               },
             ),
             ListTile(
@@ -145,18 +152,26 @@ class _GridViewTimerState extends State<GridViewTimer> {
     }
   }
 
-  void sendEmailFeedback() async {
+  void _sendEmailFeedback() async {
     final Email email = Email(
       subject: 'Feedback Multi Timer App',
       recipients: ['multitimerapp@gmail.com'],
       isHTML: false,
     );
-    MyApp.analytics.logEvent(name: "Send email");
+    //MyApp.analytics.logEvent(name: "Send email");
     await FlutterEmailSender.send(email);
   }
 
   void _rateApp() {
     widget.inAppReview.openStoreListing(appStoreId: APPSTORE_ID_IOS);
-    MyApp.analytics.logEvent(name: "Rate app");
+    //MyApp.analytics.logEvent(name: "Rate app");
+  }
+
+  void _numberOfTimer() async {
+    await db.getNumberOfTimer().then((value) {
+      setState(() {
+        numberOfTimer = value;
+      });
+    });
   }
 }

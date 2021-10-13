@@ -36,16 +36,14 @@ class _TimeWidgetState extends State<TimeWidget> {
                 ),
                 child: Text("HH"),
               ),
-              NumberPicker.integer(
-                initialValue: hour,
+              NumberPicker(
+                value: hour,
                 minValue: 0,
                 maxValue: 23,
-                onChanged: (val){
-                  setState(() {
-                    hour = val;
-                  });
-                },
-              )
+                step: 1,
+                haptics: true,
+                onChanged: (val) => setState(() => hour = val),
+              ),
             ],
           ),
           Column(
@@ -56,8 +54,8 @@ class _TimeWidgetState extends State<TimeWidget> {
                 ),
                 child: Text("MM"),
               ),
-              NumberPicker.integer(
-                initialValue: min,
+              NumberPicker(
+                value: min,
                 minValue: 0,
                 maxValue: 59,
                 onChanged: (val){
@@ -76,11 +74,11 @@ class _TimeWidgetState extends State<TimeWidget> {
                 ),
                 child: Text("SS"),
               ),
-              NumberPicker.integer(
-                initialValue: sec,
+              NumberPicker(
+                value: sec,
                 minValue: 0,
                 maxValue: 59,
-                listViewWidth: 60.0,
+              //  listViewWidth: 60.0,
                 onChanged: (val){
                   setState(() {
                     sec = val;

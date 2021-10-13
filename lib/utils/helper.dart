@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 int hourMinSecToInt(int hour, int min, int sec){
   return hour*60*60+min*60+sec;
 }
@@ -47,4 +45,9 @@ String timeToStringHMS(time){
     sec = '$s';
   return '$hour:$min:$sec';
 
+}
+
+void logScreen({String screenName, String screenClass}){
+  print(screenName);
+  //MyApp.analytics.setCurrentScreen(screenName: screenName, screenClassOverride: screenClass);
 }

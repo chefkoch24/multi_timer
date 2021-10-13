@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:multi_timer/database.dart';
-import 'package:multi_timer/main.dart';
 import 'package:multi_timer/model/timer.dart';
 import 'package:multi_timer/utils/helper.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -43,6 +42,11 @@ class _CreateTimerState extends State<CreateTimer> {
       maximumNuberOfTimer = value;
     });
     super.initState();
+    if(editMode){
+      logScreen(screenName: "Edit Timer", screenClass:"CreateTimer");
+    }else {
+      logScreen(screenName: "Create Timer", screenClass:"CreateTimer");
+    }
   }
 
   @override
@@ -71,25 +75,11 @@ class _CreateTimerState extends State<CreateTimer> {
                     controller: nameController,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please enter some text';
+                        return 'Please enter a timer name';
                       }
                       return null;
                     },
                   ),
-                  /* isError
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 25.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                "Please enter a time",
-                                style: TextStyle(color: ERROR_TEXT, fontSize: 12),
-                              )
-                            ],
-                          ),
-                        )
-                      : Container(),*/
                   Padding(
                     padding: const EdgeInsets.only(
                       top: 25,
@@ -105,12 +95,12 @@ class _CreateTimerState extends State<CreateTimer> {
                                 bottom: 1.0,
                               ),
                               child: Text(
-                                "HH",
+                                "hours",
                                // style: isError ? errorStyle() : normalStyle(),
                               ),
                             ),
-                            NumberPicker.integer(
-                              initialValue: hour,
+                            NumberPicker(
+                              value: hour,
                               minValue: 0,
                               maxValue: 23,
                               onChanged: (val) {
@@ -127,12 +117,12 @@ class _CreateTimerState extends State<CreateTimer> {
                               padding: EdgeInsets.only(
                                 bottom: 1.0,
                               ),
-                              child: Text("MM",
+                              child: Text("minuets",
                                  // style: isError ? errorStyle() : normalStyle()
                               ),
                             ),
-                            NumberPicker.integer(
-                              initialValue: min,
+                            NumberPicker(
+                              value: min,
                               minValue: 0,
                               maxValue: 59,
                               onChanged: (val) {
@@ -149,12 +139,12 @@ class _CreateTimerState extends State<CreateTimer> {
                               padding: EdgeInsets.only(
                                 bottom: 1.0,
                               ),
-                              child: Text("SS",
+                              child: Text("seconds",
                                   //style: isError ? errorStyle() : normalStyle()
                               ),
                             ),
-                            NumberPicker.integer(
-                              initialValue: sec,
+                            NumberPicker(
+                              value: sec,
                               minValue: 0,
                               maxValue: 59,
                               onChanged: (val) {
@@ -172,12 +162,10 @@ class _CreateTimerState extends State<CreateTimer> {
                     width: (MediaQuery.of(context).size.width) / 2,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 25.0),
-                      child: FlatButton(
-                        color: PRIMARY,
-                        textColor: STANDARD_LIGHT_TEXT,
-                        disabledTextColor: STANDARD_DARK_TEXT,
-                        padding: EdgeInsets.all(8.0),
-                        splashColor: PRIMARY,
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(PRIMARY),
+                        ),
                         onPressed: () {
                           // Validate returns true if the form is valid, or false
                           // otherwise.
@@ -199,15 +187,14 @@ class _CreateTimerState extends State<CreateTimer> {
                               Navigator.pop(context, true);
                             } else {
                               _save();
-                              maximumNuberOfTimer < MAXIMUM_NUMBER_OF_TIMER ? Navigator.pop(context, "Timer successful created"): Navigator.pop(context, "You have already maximum nuber of timer");
-
+                              maximumNuberOfTimer < MAXIMUM_NUMBER_OF_TIMER ? Navigator.pop(context, "Timer successful created"): Navigator.pop(context, "You have already maximum number of timer");
                             }
                           }
                           // showSnackBar(context, "Created");
                         },
                         child: Text(
                           editMode ? "Update" : "Create",
-                          style: TextStyle(fontSize: 20.0),
+                          style: TextStyle(fontSize: 20.0, color: STANDARD_LIGHT_TEXT),
                         ),
                       ),
                     ),
@@ -225,9 +212,7 @@ class _CreateTimerState extends State<CreateTimer> {
           name: nameController.text, time: hourMinSecToInt(hour, min, sec));
       db.insert(t);
     }
-    MyApp.analytics.logEvent(name: "timer_created", parameters: {
-      'time': hourMinSecToInt(hour, min, sec)
-    });
+   // MyApp.analytics.logEvent(name: "timer_created", parameters: {'time': hourMinSecToInt(hour, min, sec)});
   }
 
   void _update() {
@@ -236,14 +221,12 @@ class _CreateTimerState extends State<CreateTimer> {
         name: nameController.text,
         time: hourMinSecToInt(hour, min, sec));
     db.updateTimer(t);
-    MyApp.analytics.logEvent(name: "timer_updated", parameters: {
-      'time': hourMinSecToInt(hour, min, sec)
-    });
+    //MyApp.analytics.logEvent(name: "timer_updated", parameters: {'time': hourMinSecToInt(hour, min, sec)});
   }
 
   void showSnackBar(BuildContext context, String message) {
     SnackBar snackBar = SnackBar(content: Text(message));
-    Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   TextStyle normalStyle() {

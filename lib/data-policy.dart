@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:multi_timer/utils/helper.dart';
 
 class DataPolicy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    logScreen(screenName: "Data Policy", screenClass:"DataPolicy");
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by

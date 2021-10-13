@@ -26,9 +26,7 @@ class CreateTimerButton extends StatelessWidget {
     ),
     );
     if(result!= null){
-      Scaffold.of(context)
-        ..removeCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text("$result")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("$result")));
         onChanged(true);
     }
     onChanged(false);
