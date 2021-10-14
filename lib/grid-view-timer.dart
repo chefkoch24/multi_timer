@@ -5,6 +5,7 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:multi_timer/create-button.dart';
 import 'package:multi_timer/data-policy.dart';
 import 'package:multi_timer/database.dart';
+import 'package:multi_timer/imprint.dart';
 import 'package:multi_timer/model/timer.dart';
 import 'package:multi_timer/settings.dart';
 import 'package:multi_timer/timer-widget.dart';
@@ -87,20 +88,6 @@ class _GridViewTimerState extends State<GridViewTimer> {
               ),
             ),
             ListTile(
-              title: Text('Datapolicy'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DataPolicy(),
-                      settings: RouteSettings(name: 'Data Policy'),
-                    ));
-              },
-            ),
-            ListTile(
               title: Text("Send feedback"),
               onTap: () {
                 _sendEmailFeedback();
@@ -114,6 +101,35 @@ class _GridViewTimerState extends State<GridViewTimer> {
                   // Then close the drawer
                   _rateApp();
                 }),
+
+            ListTile(
+              title: Text('Privacy Policy'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DataPolicy(),
+                      settings: RouteSettings(name: 'Privacy Policy'),
+                    ));
+              },
+            ),
+            ListTile(
+              title: Text('Imprint'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Imprint(),
+                      settings: RouteSettings(name: 'Imprint'),
+                    ));
+              },
+            ),
           ],
         ),
       ),
