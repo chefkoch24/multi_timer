@@ -117,7 +117,7 @@ class _CreateTimerState extends State<CreateTimer> {
                               padding: EdgeInsets.only(
                                 bottom: 1.0,
                               ),
-                              child: Text("minuets",
+                              child: Text("minutes",
                                  // style: isError ? errorStyle() : normalStyle()
                               ),
                             ),
@@ -212,7 +212,7 @@ class _CreateTimerState extends State<CreateTimer> {
           name: nameController.text, time: hourMinSecToInt(hour, min, sec));
       db.insert(t);
     }
-   // MyApp.analytics.logEvent(name: "timer_created", parameters: {'time': hourMinSecToInt(hour, min, sec)});
+    logEvent("timer_created", {'time': hourMinSecToInt(hour, min, sec)});
   }
 
   void _update() {
@@ -221,7 +221,7 @@ class _CreateTimerState extends State<CreateTimer> {
         name: nameController.text,
         time: hourMinSecToInt(hour, min, sec));
     db.updateTimer(t);
-    //MyApp.analytics.logEvent(name: "timer_updated", parameters: {'time': hourMinSecToInt(hour, min, sec)});
+    logEvent("timer_updated", {'time': hourMinSecToInt(hour, min, sec)});
   }
 
   void showSnackBar(BuildContext context, String message) {

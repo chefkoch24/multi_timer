@@ -46,9 +46,6 @@ class _TimerWidgetState extends State<TimerWidget> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {
-          if (started == false) _startTimer();
-        },
         child: Card(
           child: Column(
             children: <Widget>[
@@ -151,6 +148,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   }
 
   _startTimer() {
+    logEvent("start_timer", {"time": widget.time});
     _counterTimer = widget.time;
     int counterIntern = _counterTimer;
     started = true;
@@ -183,7 +181,8 @@ class _TimerWidgetState extends State<TimerWidget> {
   void _delete() {
     db.deleteTimer(widget.id);
     widget.onChanged(true);
-    // MyApp.analytics.logEvent(name: "Timer deleted");
+    logEvent("timer_deleted",{});
+
   }
 
   void _edit() {
@@ -194,7 +193,7 @@ class _TimerWidgetState extends State<TimerWidget> {
           time: widget.time,
         ),
         context);
-    //MyApp.analytics.logEvent(name: "timer_edited", parameters: {'time': widget.time});
+    logEvent("timer_edited", {'time': widget.time});
   }
 
   void _navigateToEdit(Widget w, BuildContext context) async {
@@ -208,6 +207,7 @@ class _TimerWidgetState extends State<TimerWidget> {
   }
 
   void _stop() {
+    logEvent("stop_timer", {"time": widget.time});
     setState(() {
       t.cancel();
       started = false;

@@ -1,3 +1,5 @@
+import 'package:multi_timer/main.dart';
+
 int hourMinSecToInt(int hour, int min, int sec){
   return hour*60*60+min*60+sec;
 }
@@ -47,7 +49,11 @@ String timeToStringHMS(time){
 
 }
 
-void logScreen({String screenName, String screenClass}){
-  print(screenName);
-  //MyApp.analytics.setCurrentScreen(screenName: screenName, screenClassOverride: screenClass);
+Future<void> logScreen({String screenName, String screenClass}) async {
+  print(screenName + screenClass);
+  await MyApp.analytics.setCurrentScreen(screenName: screenName, screenClassOverride: screenClass);
+}
+Future<void> logEvent(String eventName, parameters) async {
+  print(eventName+ parameters.toString());
+  await MyApp.analytics.logEvent(name: eventName, parameters: parameters);
 }

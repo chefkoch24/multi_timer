@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -158,13 +159,13 @@ class _GridViewTimerState extends State<GridViewTimer> {
       recipients: ['multitimerapp@gmail.com'],
       isHTML: false,
     );
-    //MyApp.analytics.logEvent(name: "Send email");
+    logEvent("start_send_email", {});
     await FlutterEmailSender.send(email);
   }
 
   void _rateApp() {
     widget.inAppReview.openStoreListing(appStoreId: APPSTORE_ID_IOS);
-    //MyApp.analytics.logEvent(name: "Rate app");
+    logEvent("rate_app", {});
   }
 
   void _numberOfTimer() async {
