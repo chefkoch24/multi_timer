@@ -1,4 +1,4 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -11,6 +11,7 @@ import 'package:multi_timer/settings.dart';
 import 'package:multi_timer/timer-widget.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:multi_timer/utils/helper.dart';
+import 'dart:io';
 
 class GridViewTimer extends StatefulWidget {
   GridViewTimer({Key key, this.title}) : super(key: key);
@@ -93,14 +94,14 @@ class _GridViewTimerState extends State<GridViewTimer> {
                 _sendEmailFeedback();
               },
             ),
-            ListTile(
+            /*ListTile(
                 title: Text('Rate the App'),
                 onTap: () {
                   // Update the state of the app
                   // ...
                   // Then close the drawer
                   _rateApp();
-                }),
+                }),*/
 
             ListTile(
               title: Text('Privacy Policy'),
@@ -179,9 +180,8 @@ class _GridViewTimerState extends State<GridViewTimer> {
     await FlutterEmailSender.send(email);
   }
 
-  void _rateApp() {
-    widget.inAppReview.openStoreListing(appStoreId: APPSTORE_ID_IOS);
-    logEvent("rate_app", {});
+  Future<void> _rateApp() async {
+    // TODO: Implement rating with link
   }
 
   void _numberOfTimer() async {
