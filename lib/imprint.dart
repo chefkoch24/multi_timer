@@ -24,7 +24,7 @@ class Imprint extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 TextSpan(
                     text:
-                        "Felix Künnecke\nNadlerstr. 44\n68259 Mannheim\nE-Mail: multitimer@gmail.com")
+                        "Felix Künnecke\nNadlerstr. 44\n68259 Mannheim\nE-Mail: multitimerapp@gmail.com")
               ],
             ),
           ),
