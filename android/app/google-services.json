@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "400510203934",
+    "firebase_url": "https://multi-timer-app.firebaseio.com",
+    "project_id": "multi-timer-app",
+    "storage_bucket": "multi-timer-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:400510203934:android:e482205e77a3368ac6560f",
+        "android_client_info": {
+          "package_name": "project.flutter.multi_timer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "400510203934-od846e5m8109gc49n3qa6j6arg7n46fa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDasrx7CJ8rXOIHsaLVHO44XJToHqyrXkw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "400510203934-od846e5m8109gc49n3qa6j6arg7n46fa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
