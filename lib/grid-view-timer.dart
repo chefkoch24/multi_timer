@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -11,7 +10,6 @@ import 'package:multi_timer/settings.dart';
 import 'package:multi_timer/timer-widget.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:multi_timer/utils/helper.dart';
-import 'dart:io';
 
 class GridViewTimer extends StatefulWidget {
   GridViewTimer({Key? key, required this.title}) : super(key: key);
@@ -149,7 +147,7 @@ class _GridViewTimerState extends State<GridViewTimer> {
         itemCount: timers.length,
         itemBuilder: (BuildContext context, int index) {
           return TimerWidget(
-              id: timers[index].id,
+              id: timers[index].id ?? 0,
               name: timers[index].name,
               time: timers[index].time,
               onChanged: _handleChange);

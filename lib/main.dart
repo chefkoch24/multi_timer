@@ -3,7 +3,6 @@ import 'package:multi_timer/grid-view-timer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'package:multi_timer/settings.dart';
 
 
 Future<void> main() async {

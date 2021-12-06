@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'dart:isolate';
-import 'dart:math';
 
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:multi_timer/create-timer.dart';
@@ -14,13 +11,13 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class TimerWidget extends StatefulWidget {
-  final int? id;
+  final int id;
   final String name;
   final int time;
   final ValueChanged<bool> onChanged;
 
   @required
-  TimerWidget({Key? key, this.id, required this.name, required this.time, required this.onChanged})
+  TimerWidget({Key? key, required this.id, required this.name, required this.time, required this.onChanged})
       : super(key: key);
 
   @override
@@ -32,9 +29,8 @@ class _TimerWidgetState extends State<TimerWidget> {
   late int _counterTimer;
   bool started = false;
   late Timer t;
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-  int timerId = 0;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
   @override
   void initState() {
     super.initState();
@@ -93,7 +89,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                                   if (value == "edit") {
                                     _edit();
                                   } else if (value == "delete") {
-                                    _delete(widget.id!);
+                                    _delete(widget.id);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(content: Text("Timer deleted")));
                                   }
@@ -154,16 +150,9 @@ class _TimerWidgetState extends State<TimerWidget> {
         ));
   }
 
-  _startTimer() async{
-    logEvent("start_timer", {"time": widget.time});
-    _counterTimer = widget.time;
-    int counterIntern = _counterTimer;
-    started = true;
-    print(_counterTimer);
+  _scheduleNotification(){
     flutterLocalNotificationsPlugin.zonedSchedule(
-        0,
-        'scheduled title',
-        'scheduled body',
+        widget.id, 'Multi Timer', widget.name + ' is finished',
         tz.TZDateTime.now(tz.local).add(Duration(seconds: widget.time)),
         const NotificationDetails(
             android: AndroidNotificationDetails(
@@ -175,6 +164,14 @@ class _TimerWidgetState extends State<TimerWidget> {
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
         UILocalNotificationDateInterpretation.absoluteTime);
+  }
+
+  _startTimer() async{
+    logEvent("start_timer", {"time": widget.time});
+    _counterTimer = widget.time;
+    int counterIntern = _counterTimer;
+    started = true;
+    _scheduleNotification();
     t = Timer.periodic(Duration(seconds: 1), (t) {
       if (_counterTimer > 0) {
         if (this.mounted) {
@@ -195,7 +192,7 @@ class _TimerWidgetState extends State<TimerWidget> {
           // Android only - API >= 28
           asAlarm: true, // Android only - all APIs
         );
-        //showNotification();
+
         counterIntern--;
       }
     });
@@ -229,26 +226,15 @@ class _TimerWidgetState extends State<TimerWidget> {
     }
   }
 
-  void _stop() {
-    AndroidAlarmManager.cancel(0);
+  Future<void> _stop() async {
     logEvent("stop_timer", {"time": widget.time});
+    await flutterLocalNotificationsPlugin.cancel(widget.id);
     setState(() {
       t.cancel();
       started = false;
       _counterTimer = widget.time;
     });
     FlutterRingtonePlayer.stop();
-  }
-
-  showNotification() {
-    print("timer");
-    var android = AndroidNotificationDetails('id', 'channel ',
-        priority: Priority.high, importance: Importance.max);
-    var iOS = IOSNotificationDetails();
-    var platform = new NotificationDetails(android: android, iOS: iOS);
-    flutterLocalNotificationsPlugin.show(
-        0, 'Multi Timer', widget.name + ' is finished', platform,
-        payload: 'Welcome to the Local Notification demo');
   }
 
   Future<void> onSelectNotification(String? payload) async {
