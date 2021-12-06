@@ -5,7 +5,7 @@ class CreateTimerButton extends StatelessWidget {
 
   final ValueChanged<bool> onChanged;
 
-  CreateTimerButton({Key key, @required this.onChanged})
+  CreateTimerButton({Key? key, required this.onChanged})
       : super(key: key);
 
   @override
@@ -21,7 +21,7 @@ class CreateTimerButton extends StatelessWidget {
   _navigateAndDisplaySelection(BuildContext context) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CreateTimer(name: null, time:0),
+      MaterialPageRoute(builder: (context) => CreateTimer(name: "", time:0),
       settings: RouteSettings(name: 'Create Timer'),
     ),
     );

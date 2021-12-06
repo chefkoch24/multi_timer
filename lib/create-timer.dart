@@ -9,9 +9,9 @@ import 'settings.dart';
 class CreateTimer extends StatefulWidget {
   final String name;
   final int time;
-  final int id;
+  final int? id;
 
-  CreateTimer({Key key, @required this.id, this.name, this.time})
+  CreateTimer({Key? key, this.id, required this.name, required this.time})
       : super(key: key);
 
   @override
@@ -27,7 +27,7 @@ class _CreateTimerState extends State<CreateTimer> {
   bool editMode = false;
   final _timernameForm = GlobalKey<FormFieldState>();
   bool isError = false;
-  int maximumNuberOfTimer;
+  late int maximumNuberOfTimer;
 
   @override
   void initState() {
@@ -74,7 +74,7 @@ class _CreateTimerState extends State<CreateTimer> {
                     key: _timernameForm,
                     controller: nameController,
                     validator: (value) {
-                      if (value.isEmpty) {
+                      if (value!.isEmpty) {
                         return 'Please enter a timer name';
                       }
                       return null;
@@ -164,7 +164,7 @@ class _CreateTimerState extends State<CreateTimer> {
                       padding: const EdgeInsets.only(top: 25.0),
                       child: TextButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(PRIMARY),
+                          backgroundColor: MaterialStateProperty.all<Color>(Settings.PRIMARY),
                         ),
                         onPressed: () {
                           // Validate returns true if the form is valid, or false
@@ -179,7 +179,7 @@ class _CreateTimerState extends State<CreateTimer> {
                               isError = false;
                             });
                           }
-                          if (_timernameForm.currentState.validate() &&
+                          if (_timernameForm.currentState!.validate() &&
                               isError != true) {
                             isError = false;
                             if (editMode) {
@@ -187,14 +187,14 @@ class _CreateTimerState extends State<CreateTimer> {
                               Navigator.pop(context, true);
                             } else {
                               _save();
-                              maximumNuberOfTimer < MAXIMUM_NUMBER_OF_TIMER ? Navigator.pop(context, "Timer successful created"): Navigator.pop(context, "You have already maximum number of timer");
+                              maximumNuberOfTimer < Settings.MAXIMUM_NUMBER_OF_TIMER ? Navigator.pop(context, "Timer successful created"): Navigator.pop(context, "You have already maximum number of timer");
                             }
                           }
                           // showSnackBar(context, "Created");
                         },
                         child: Text(
                           editMode ? "Update" : "Create",
-                          style: TextStyle(fontSize: 20.0, color: STANDARD_LIGHT_TEXT),
+                          style: TextStyle(fontSize: 20.0, color: Settings.STANDARD_LIGHT_TEXT),
                         ),
                       ),
                     ),
@@ -207,7 +207,7 @@ class _CreateTimerState extends State<CreateTimer> {
   }
 
   void _save() {
-    if (MAXIMUM_NUMBER_OF_TIMER > maximumNuberOfTimer) {
+    if (Settings.MAXIMUM_NUMBER_OF_TIMER > maximumNuberOfTimer) {
       MyTimer t = new MyTimer(
           name: nameController.text, time: hourMinSecToInt(hour, min, sec));
       db.insert(t);
@@ -231,18 +231,18 @@ class _CreateTimerState extends State<CreateTimer> {
 
   TextStyle normalStyle() {
     return TextStyle(
-      color: STANDARD_DARK_TEXT,
+      color: Settings.STANDARD_DARK_TEXT,
     );
   }
 
   TextStyle errorStyle() {
-    return TextStyle(color: ERROR_TEXT);
+    return TextStyle(color: Settings.ERROR_TEXT);
   }
 
   void showErrorMessage(){
     Fluttertoast.showToast(
       msg: "Please set a timer",
-      backgroundColor: ERROR_TEXT,
+      backgroundColor: Settings.ERROR_TEXT,
     );
   }
 }

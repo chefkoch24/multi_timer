@@ -49,8 +49,7 @@ String timeToStringHMS(time){
 
 }
 
-Future<void> logScreen({String screenName, String screenClass}) async {
-  print(screenName + screenClass);
+Future<void> logScreen({required String screenName, required String screenClass}) async {
   await MyApp.analytics.setCurrentScreen(screenName: screenName, screenClassOverride: screenClass);
 }
 Future<void> logEvent(String eventName, parameters) async {

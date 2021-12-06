@@ -14,7 +14,7 @@ import 'package:multi_timer/utils/helper.dart';
 import 'dart:io';
 
 class GridViewTimer extends StatefulWidget {
-  GridViewTimer({Key key, this.title}) : super(key: key);
+  GridViewTimer({Key? key, required this.title}) : super(key: key);
 
   final String title;
   final InAppReview inAppReview = InAppReview.instance;
@@ -74,9 +74,9 @@ class _GridViewTimerState extends State<GridViewTimer> {
                           child: new CircularPercentIndicator(
                             radius: 80.0,
                             lineWidth: 5.0,
-                            percent: numberOfTimer / MAXIMUM_NUMBER_OF_TIMER,
+                            percent: numberOfTimer / Settings.MAXIMUM_NUMBER_OF_TIMER,
                             center: new Text(
-                                "$numberOfTimer of $MAXIMUM_NUMBER_OF_TIMER"),
+                                "$numberOfTimer of " + Settings.MAXIMUM_NUMBER_OF_TIMER.toString()),
                             progressColor: Colors.white,
                           ),
                         );
@@ -85,7 +85,7 @@ class _GridViewTimerState extends State<GridViewTimer> {
                 ],
               ),
               decoration: BoxDecoration(
-                color: PRIMARY,
+                color: Settings.PRIMARY,
               ),
             ),
             ListTile(

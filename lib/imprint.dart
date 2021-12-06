@@ -17,7 +17,7 @@ class Imprint extends StatelessWidget {
           padding: const EdgeInsets.all(20.0),
           child: RichText(
             text: TextSpan(
-              style: TextStyle(color: STANDARD_DARK_TEXT),
+              style: TextStyle(color: Settings.STANDARD_DARK_TEXT),
               children: const <TextSpan>[
                 TextSpan(
                     text: "Information in accordance with section 5 TMG:\n",

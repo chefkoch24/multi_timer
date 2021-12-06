@@ -22,8 +22,8 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
   // Only allow a single open connection to the database.
-  static Database _database;
-  Future<Database> get database async {
+  static Database? _database;
+  Future<Database?> get database async {
     if (_database != null) return _database;
     _database = await _initDatabase();
     return _database;
@@ -54,8 +54,8 @@ class DatabaseHelper {
   // Database helper methods:
 
   Future<int> insert(MyTimer t) async {
-    Database db = await database;
-    int id = await db.insert(timerTable,
+    Database? db = await database;
+    int id = await db!.insert(timerTable,
         t.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
     return id;
@@ -63,10 +63,10 @@ class DatabaseHelper {
 
   Future<List<MyTimer>> getAllTimers() async {
     // Get a reference to the database.
-    final Database db = await database;
+    final Database? db = await database;
 
     // Query the table for all The Dogs.
-    final List<Map<String, dynamic>> maps = await db.query(timerTable);
+    final List<Map<String, dynamic>> maps = await db!.query(timerTable);
 
     // Convert the List<Map<String, dynamic> into a List<Dog>.
     return List.generate(maps.length, (i) {
@@ -79,32 +79,38 @@ class DatabaseHelper {
   }
 
   Future<int> getNumberOfTimer() async{
-    Database db = await database;
-    int result =  Sqflite.firstIntValue(await db.rawQuery("SELECT COUNT($columnId) FROM $timerTable"));
-    return result;
+    Database? db = await database;
+    int? result =  Sqflite.firstIntValue(await db!.rawQuery("SELECT COUNT($columnId) FROM $timerTable"));
+    return result!;
   }
 
   Future<MyTimer> getTimer(int id) async {
-    Database db = await database;
-    List<Map> maps = await db.query(timerTable,
+    Database? db = await database;
+    List<Map> maps = await db!.query(timerTable,
         columns: [columnId, name, time],
         where: '$columnId = ?',
         whereArgs: [id]);
     if (maps.length > 0) {
       return MyTimer(
+        id: id,
           name: maps.first[name],
           time: maps.first[time],
       );
     }
-    return null;
+    return  MyTimer(
+      id: id,
+      name: '',
+      time: 0,
+    );
   }
+
 
   Future<void> deleteTimer(int id) async {
     // Get a reference to the database.
     final db = await database;
 
     // Remove the Dog from the database.
-    await db.delete(
+    await db!.delete(
       timerTable,
       // Use a `where` clause to delete a specific dog.
       where: "$columnId = ?",
@@ -118,7 +124,7 @@ class DatabaseHelper {
     final db = await database;
 
     // Update the given Dog.
-    await db.update(
+    await db!.update(
       timerTable,
       t.toMap(),
       // Ensure that the Dog has a matching id.

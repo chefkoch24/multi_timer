@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:multi_timer/grid-view-timer.dart';
-import 'package:multi_timer/settings.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:multi_timer/settings.dart';
 
 
 Future<void> main() async {
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Multi Timer App',
       theme: ThemeData(
-        primarySwatch: PRIMARY,
+        primarySwatch: Colors.green,
       ),
       home: GridViewTimer(title: "Multi Timer",),
       navigatorObservers: <NavigatorObserver>[observer],
