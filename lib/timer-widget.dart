@@ -7,6 +7,8 @@ import 'package:multi_timer/database.dart';
 import 'package:multi_timer/settings.dart';
 import 'package:multi_timer/utils/helper.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class TimerWidget extends StatefulWidget {
   final int id;
@@ -15,7 +17,7 @@ class TimerWidget extends StatefulWidget {
   final ValueChanged<bool> onChanged;
 
   @required
-  TimerWidget({Key key, this.id, this.name, this.time, this.onChanged})
+  TimerWidget({Key? key, required this.id, required this.name, required this.time, required this.onChanged})
       : super(key: key);
 
   @override
@@ -24,14 +26,15 @@ class TimerWidget extends StatefulWidget {
 
 class _TimerWidgetState extends State<TimerWidget> {
   DatabaseHelper db = DatabaseHelper.instance;
-  int _counterTimer;
+  late int _counterTimer;
   bool started = false;
-  Timer t;
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  late Timer t;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
+    super.initState();
+    tz.initializeTimeZones();
     _counterTimer = widget.time;
     super.initState();
     var initializationSettingsAndroid =
@@ -86,7 +89,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                                   if (value == "edit") {
                                     _edit();
                                   } else if (value == "delete") {
-                                    _delete();
+                                    _delete(widget.id);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(content: Text("Timer deleted")));
                                   }
@@ -121,7 +124,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                           child: Text(
                             "STOP",
                             style: TextStyle(
-                                fontSize: 14, color: STANDARD_LIGHT_TEXT),
+                                fontSize: 14, color: Settings.STANDARD_LIGHT_TEXT),
                           ),
                           onPressed: () {
                             _stop();
@@ -138,7 +141,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                           child: Text(
                             "START",
                             style: TextStyle(
-                                fontSize: 14, color: STANDARD_LIGHT_TEXT),
+                                fontSize: 14, color: Settings.STANDARD_LIGHT_TEXT),
                           )),
                 ],
               ),
@@ -147,11 +150,28 @@ class _TimerWidgetState extends State<TimerWidget> {
         ));
   }
 
-  _startTimer() {
+  _scheduleNotification(){
+    flutterLocalNotificationsPlugin.zonedSchedule(
+        widget.id, 'Multi Timer', widget.name + ' is finished',
+        tz.TZDateTime.now(tz.local).add(Duration(seconds: widget.time)),
+        const NotificationDetails(
+            android: AndroidNotificationDetails(
+                'full screen channel id', 'full screen channel name',
+                channelDescription: 'full screen channel description',
+                priority: Priority.high,
+                importance: Importance.high,
+                fullScreenIntent: true)),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime);
+  }
+
+  _startTimer() async{
     logEvent("start_timer", {"time": widget.time});
     _counterTimer = widget.time;
     int counterIntern = _counterTimer;
     started = true;
+    _scheduleNotification();
     t = Timer.periodic(Duration(seconds: 1), (t) {
       if (_counterTimer > 0) {
         if (this.mounted) {
@@ -172,14 +192,14 @@ class _TimerWidgetState extends State<TimerWidget> {
           // Android only - API >= 28
           asAlarm: true, // Android only - all APIs
         );
-        showNotification();
+
         counterIntern--;
       }
     });
   }
 
-  void _delete() {
-    db.deleteTimer(widget.id);
+  void _delete(int id) {
+    db.deleteTimer(id);
     widget.onChanged(true);
     logEvent("timer_deleted",{});
 
@@ -206,8 +226,9 @@ class _TimerWidgetState extends State<TimerWidget> {
     }
   }
 
-  void _stop() {
+  Future<void> _stop() async {
     logEvent("stop_timer", {"time": widget.time});
+    await flutterLocalNotificationsPlugin.cancel(widget.id);
     setState(() {
       t.cancel();
       started = false;
@@ -216,17 +237,7 @@ class _TimerWidgetState extends State<TimerWidget> {
     FlutterRingtonePlayer.stop();
   }
 
-  showNotification() async {
-    var android = AndroidNotificationDetails('id', 'channel ', 'description',
-        priority: Priority.high, importance: Importance.max);
-    var iOS = IOSNotificationDetails();
-    var platform = new NotificationDetails(android: android, iOS: iOS);
-    await flutterLocalNotificationsPlugin.show(
-        0, 'Multi Timer', widget.name + ' is finished', platform,
-        payload: 'Welcome to the Local Notification demo');
-  }
-
-  Future<void> onSelectNotification(String payload) async {
+  Future<void> onSelectNotification(String? payload) async {
     if (payload != null) {
       print('notification payload: ' + payload);
     }

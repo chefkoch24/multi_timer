@@ -1,9 +1,9 @@
 class MyTimer {
-  final int id;
+  final int? id;
   final String name;
   final int time;
 
-  MyTimer({this.id, this.name, this.time});
+  MyTimer({ this.id, required this.name, required this.time});
 
   Map<String, dynamic> toMap() {
     return {

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:in_app_review/in_app_review.dart';
@@ -11,10 +10,9 @@ import 'package:multi_timer/settings.dart';
 import 'package:multi_timer/timer-widget.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:multi_timer/utils/helper.dart';
-import 'dart:io';
 
 class GridViewTimer extends StatefulWidget {
-  GridViewTimer({Key key, this.title}) : super(key: key);
+  GridViewTimer({Key? key, required this.title}) : super(key: key);
 
   final String title;
   final InAppReview inAppReview = InAppReview.instance;
@@ -74,9 +72,9 @@ class _GridViewTimerState extends State<GridViewTimer> {
                           child: new CircularPercentIndicator(
                             radius: 80.0,
                             lineWidth: 5.0,
-                            percent: numberOfTimer / MAXIMUM_NUMBER_OF_TIMER,
+                            percent: numberOfTimer / Settings.MAXIMUM_NUMBER_OF_TIMER,
                             center: new Text(
-                                "$numberOfTimer of $MAXIMUM_NUMBER_OF_TIMER"),
+                                "$numberOfTimer of " + Settings.MAXIMUM_NUMBER_OF_TIMER.toString()),
                             progressColor: Colors.white,
                           ),
                         );
@@ -85,7 +83,7 @@ class _GridViewTimerState extends State<GridViewTimer> {
                 ],
               ),
               decoration: BoxDecoration(
-                color: PRIMARY,
+                color: Settings.PRIMARY,
               ),
             ),
             ListTile(
@@ -149,7 +147,7 @@ class _GridViewTimerState extends State<GridViewTimer> {
         itemCount: timers.length,
         itemBuilder: (BuildContext context, int index) {
           return TimerWidget(
-              id: timers[index].id,
+              id: timers[index].id ?? 0,
               name: timers[index].name,
               time: timers[index].time,
               onChanged: _handleChange);
