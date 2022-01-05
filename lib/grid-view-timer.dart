@@ -177,7 +177,9 @@ class _GridViewTimerState extends State<GridViewTimer> {
             title: Text('Send Feedback'),
             content: Container(
               height: MediaQuery.of(context).size.height * 0.15,
-              child: Column(children: [
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                 Text('Send us feedback per mail to:'),
                 Row(children: [
                   SelectableText(
