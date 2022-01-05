@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:multi_timer/create-timer.dart';
 import 'package:multi_timer/database.dart';
-import 'package:multi_timer/settings.dart';
 import 'package:multi_timer/utils/helper.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -124,7 +123,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                           child: Text(
                             "STOP",
                             style: TextStyle(
-                                fontSize: 14, color: Settings.STANDARD_LIGHT_TEXT),
+                                fontSize: 14, color: Theme.of(context).textTheme.button?.color),
                           ),
                           onPressed: () {
                             _stop();
@@ -133,7 +132,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                       : TextButton(
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.green),
+                                MaterialStateProperty.all<Color>(Theme.of(context).primaryColor),
                           ),
                           onPressed: () {
                             _startTimer();
@@ -141,7 +140,7 @@ class _TimerWidgetState extends State<TimerWidget> {
                           child: Text(
                             "START",
                             style: TextStyle(
-                                fontSize: 14, color: Settings.STANDARD_LIGHT_TEXT),
+                                fontSize: 14, color: Theme.of(context).textTheme.button?.color),
                           )),
                 ],
               ),
