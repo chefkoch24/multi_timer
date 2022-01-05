@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:multi_timer/create-button.dart';
@@ -31,7 +32,7 @@ class _GridViewTimerState extends State<GridViewTimer> {
     super.initState();
     db.getAllTimers().then((value) {
       timers = value;
-      logScreen(screenName: "Home", screenClass:"GridViewTimer");
+      logScreen(screenName: "Home", screenClass: "GridViewTimer");
     });
   }
 
@@ -72,24 +73,24 @@ class _GridViewTimerState extends State<GridViewTimer> {
                           child: new CircularPercentIndicator(
                             radius: 80.0,
                             lineWidth: 5.0,
-                            percent: numberOfTimer / Settings.MAXIMUM_NUMBER_OF_TIMER,
-                            center: new Text(
-                                "$numberOfTimer of " + Settings.MAXIMUM_NUMBER_OF_TIMER.toString()),
+                            percent: numberOfTimer /
+                                Settings.MAXIMUM_NUMBER_OF_TIMER,
+                            center: new Text("$numberOfTimer of " +
+                                Settings.MAXIMUM_NUMBER_OF_TIMER.toString()),
                             progressColor: Colors.white,
                           ),
                         );
-                      }
-                  )
+                      })
                 ],
               ),
               decoration: BoxDecoration(
-                color: Settings.PRIMARY,
+                color: Theme.of(context).secondaryHeaderColor,
               ),
             ),
             ListTile(
               title: Text("Send feedback"),
               onTap: () {
-                _sendEmailFeedback();
+                _showSendFeedbackDialog();
               },
             ),
             /*ListTile(
@@ -168,14 +169,59 @@ class _GridViewTimerState extends State<GridViewTimer> {
     }
   }
 
+  void _showSendFeedbackDialog() {
+    showDialog(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: Text('Send Feedback'),
+            content: Container(
+              height: MediaQuery.of(context).size.height * 0.15,
+              child: Column(children: [
+                Text('Send us feedback per mail to:'),
+                Row(children: [
+                  SelectableText(
+                    "multitimerapp@gmail.com",
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.copy),
+                    onPressed: () {
+                      Clipboard.setData(
+                          ClipboardData(text: 'multitimerapp@gmail.com'));
+                    },
+                  ),
+                ])
+              ]),
+            ),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    _dismissDialog();
+                  },
+                  child: Text('Close')),
+              TextButton(
+                onPressed: () {
+                  _sendEmailFeedback();
+                },
+                child: Text('Open Email'),
+              )
+            ],
+          );
+        });
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
+  }
+
   void _sendEmailFeedback() async {
     final Email email = Email(
       subject: 'Feedback Multi Timer App',
       recipients: ['multitimerapp@gmail.com'],
       isHTML: false,
     );
-    logEvent("start_send_email", {});
     await FlutterEmailSender.send(email);
+    logEvent("start_send_email", {'receiver': 'multitimerapp@gmail.com'});
   }
 
   Future<void> _rateApp() async {
