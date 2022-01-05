@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:multi_timer/settings.dart';
 import 'package:multi_timer/utils/helper.dart';
 
 class Imprint extends StatelessWidget {
@@ -10,14 +9,14 @@ class Imprint extends StatelessWidget {
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: Text("Imprint"),
+          title: Text("Imprint",),
         ),
         body: SingleChildScrollView(
             child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: RichText(
             text: TextSpan(
-              style: TextStyle(color: Settings.STANDARD_DARK_TEXT),
+              style: Theme.of(context).textTheme.bodyText1,
               children: const <TextSpan>[
                 TextSpan(
                     text: "Information in accordance with section 5 TMG:\n",

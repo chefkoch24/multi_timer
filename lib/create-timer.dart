@@ -42,10 +42,10 @@ class _CreateTimerState extends State<CreateTimer> {
       maximumNuberOfTimer = value;
     });
     super.initState();
-    if(editMode){
-      logScreen(screenName: "Edit Timer", screenClass:"CreateTimer");
-    }else {
-      logScreen(screenName: "Create Timer", screenClass:"CreateTimer");
+    if (editMode) {
+      logScreen(screenName: "Edit Timer", screenClass: "CreateTimer");
+    } else {
+      logScreen(screenName: "Create Timer", screenClass: "CreateTimer");
     }
   }
 
@@ -64,145 +64,176 @@ class _CreateTimerState extends State<CreateTimer> {
           // the App.build method, and use it to set our appbar title.
           title: Text(editMode ? "Edit" : "Create"),
         ),
-        body: Container(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    decoration: InputDecoration(labelText: "Timername"),
-                    key: _timernameForm,
-                    controller: nameController,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter a timer name';
-                      }
-                      return null;
-                    },
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 10,),
+                TextFormField(
+                  cursorColor: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black87,
+                  decoration: InputDecoration(
+                    labelText: "Timername",
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 25,
-                      left: 8,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(
-                                bottom: 1.0,
-                              ),
-                              child: Text(
-                                "hours",
-                               // style: isError ? errorStyle() : normalStyle(),
-                              ),
-                            ),
-                            NumberPicker(
-                              value: hour,
-                              minValue: 0,
-                              maxValue: 23,
-                              onChanged: (val) {
-                                setState(() {
-                                  hour = val;
-                                });
-                              },
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(
-                                bottom: 1.0,
-                              ),
-                              child: Text("minutes",
-                                 // style: isError ? errorStyle() : normalStyle()
-                              ),
-                            ),
-                            NumberPicker(
-                              value: min,
-                              minValue: 0,
-                              maxValue: 59,
-                              onChanged: (val) {
-                                setState(() {
-                                  min = val;
-                                });
-                              },
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(
-                                bottom: 1.0,
-                              ),
-                              child: Text("seconds",
-                                  //style: isError ? errorStyle() : normalStyle()
-                              ),
-                            ),
-                            NumberPicker(
-                              value: sec,
-                              minValue: 0,
-                              maxValue: 59,
-                              onChanged: (val) {
-                                setState(() {
-                                  sec = val;
-                                });
-                              },
-                            )
-                          ],
-                        )
-                      ],
-                    ),
+                  key: _timernameForm,
+                  controller: nameController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter a timer name';
+                    }
+                    return null;
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 25,
+                    left: 8,
                   ),
-                  SizedBox(
-                    width: (MediaQuery.of(context).size.width) / 2,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 25.0),
-                      child: TextButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Settings.PRIMARY),
-                        ),
-                        onPressed: () {
-                          // Validate returns true if the form is valid, or false
-                          // otherwise.
-                          if (hour + min + sec <= 0) {
-                            setState(() {
-                              isError = true;
-                              showErrorMessage();
-                            });
-                          } else {
-                            setState(() {
-                              isError = false;
-                            });
-                          }
-                          if (_timernameForm.currentState!.validate() &&
-                              isError != true) {
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                              bottom: 1.0,
+                            ),
+                            child: Text(
+                              "hours",
+                              // style: isError ? errorStyle() : normalStyle(),
+                            ),
+                          ),
+                          NumberPicker(
+                            selectedTextStyle: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline1
+                                    ?.color,
+                                fontSize: 24),
+                            value: hour,
+                            minValue: 0,
+                            maxValue: 23,
+                            onChanged: (val) {
+                              setState(() {
+                                hour = val;
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                              bottom: 1.0,
+                            ),
+                            child: Text(
+                              "minutes",
+                              // style: isError ? errorStyle() : normalStyle()
+                            ),
+                          ),
+                          NumberPicker(
+                            selectedTextStyle: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline1
+                                    ?.color,
+                                fontSize: 24),
+                            value: min,
+                            minValue: 0,
+                            maxValue: 59,
+                            onChanged: (val) {
+                              setState(() {
+                                min = val;
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                              bottom: 1.0,
+                            ),
+                            child: Text(
+                              "seconds",
+                              //style: isError ? errorStyle() : normalStyle()
+                            ),
+                          ),
+                          NumberPicker(
+                            selectedTextStyle: TextStyle(
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headline1
+                                    ?.color,
+                                fontSize: 24),
+                            value: sec,
+                            minValue: 0,
+                            maxValue: 59,
+                            onChanged: (val) {
+                              setState(() {
+                                sec = val;
+                              });
+                            },
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: (MediaQuery.of(context).size.width) / 2,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 25.0),
+                    child: TextButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Theme.of(context).primaryColor),
+                      ),
+                      onPressed: () {
+                        // Validate returns true if the form is valid, or false
+                        // otherwise.
+                        if (hour + min + sec <= 0) {
+                          setState(() {
+                            isError = true;
+                            showErrorMessage();
+                          });
+                        } else {
+                          setState(() {
                             isError = false;
-                            if (editMode) {
-                              _update();
-                              Navigator.pop(context, true);
-                            } else {
-                              _save();
-                              maximumNuberOfTimer < Settings.MAXIMUM_NUMBER_OF_TIMER ? Navigator.pop(context, "Timer successful created"): Navigator.pop(context, "You have already maximum number of timer");
-                            }
+                          });
+                        }
+                        if (_timernameForm.currentState!.validate() &&
+                            isError != true) {
+                          isError = false;
+                          if (editMode) {
+                            _update();
+                            Navigator.pop(context, true);
+                          } else {
+                            _save();
+                            maximumNuberOfTimer <
+                                    Settings.MAXIMUM_NUMBER_OF_TIMER
+                                ? Navigator.pop(
+                                    context, "Timer successful created")
+                                : Navigator.pop(context,
+                                    "You have already maximum number of timer");
                           }
-                          // showSnackBar(context, "Created");
-                        },
-                        child: Text(
-                          editMode ? "Update" : "Create",
-                          style: TextStyle(fontSize: 20.0, color: Settings.STANDARD_LIGHT_TEXT),
-                        ),
+                        }
+                        // showSnackBar(context, "Created");
+                      },
+                      child: Text(
+                        editMode ? "Update" : "Create",
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            color: Theme.of(context).textTheme.button?.color),
                       ),
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
-
+          ),
         ));
   }
 
@@ -229,20 +260,9 @@ class _CreateTimerState extends State<CreateTimer> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  TextStyle normalStyle() {
-    return TextStyle(
-      color: Settings.STANDARD_DARK_TEXT,
-    );
-  }
-
-  TextStyle errorStyle() {
-    return TextStyle(color: Settings.ERROR_TEXT);
-  }
-
-  void showErrorMessage(){
+  void showErrorMessage() {
     Fluttertoast.showToast(
       msg: "Please set a timer",
-      backgroundColor: Settings.ERROR_TEXT,
     );
   }
 }

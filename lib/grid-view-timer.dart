@@ -84,7 +84,7 @@ class _GridViewTimerState extends State<GridViewTimer> {
                 ],
               ),
               decoration: BoxDecoration(
-                color: Settings.PRIMARY,
+                color: Theme.of(context).secondaryHeaderColor,
               ),
             ),
             ListTile(
